@@ -1,9 +1,11 @@
 import os
 from flask import Flask, request, Response
+from slackeventsapi import SlackEventAdapter
 
 app = Flask(__name__)
 
 SLACK_WEBHOOK_SECRET = os.environ.get('')
+VERIFICATION_TOKEN = os.environ.get('')
 
 @app.route('/slack', methods=['POST'])
 def inbound():
@@ -20,6 +22,9 @@ def inbound():
 def test():
     return Response('It works!')
 
+slack_events_adapter = SlackEventAdapter(VERIFICATION_TOKEN,
+                                         "/slack/events", app)
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=3000)
 
